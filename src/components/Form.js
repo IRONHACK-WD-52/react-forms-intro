@@ -5,6 +5,7 @@ import TextInput from "./TextInput";
 
 const bootcamps = ["Web Dev", "UX/UI Design", "Data Analytics"];
 
+// Funçāo para validar o formulario. Cada vez que o formulario é rerenderizado, esta funçāo é executada e verifica se os dados estāo corretos. Caso nāo esteja, preenche o objeto errors
 function checkErrors(state) {
   const errors = {};
 
@@ -38,6 +39,7 @@ class Form extends React.Component {
     rememberMe: false,
     allowNewsletter: "NO",
     bootcamp: "Web Dev",
+    // Precisamos desse state para controlar quais inputs o usuário interagiu pelo menos uma vez. Caso contrário, o formulário já seria carregado com erros
     touched: {
       name: false,
       email: false,
@@ -45,26 +47,19 @@ class Form extends React.Component {
     },
   };
 
-  // // Executa este método toda vez que o state é alterado
-  // componentDidUpdate() {
-  //   this.errors = { ...this.checkErrors(this.state) };
-  //   console.log(this.state);
-  // }
-
+  // Funçāo para atualizar o state toda vez que o usuário interagir com algum input
   handleChange = (event) => {
     this.setState({ [event.currentTarget.name]: event.currentTarget.value });
   };
 
-  // handleFocus = (event) => {
-  //   this.setState({ [event.currentTarget.name]: event.currentTarget.value });
-  // };
-
+  // Funçāo que é executada toda vez que o usuário "des-seleciona" (tira o foco do mouse ou teclado, ex. clicar no fundo branco da página) algum input
   handleBlur = (event) => {
     this.setState({
       touched: { ...this.state.touched, [event.target.name]: true },
     });
   };
 
+  // Funçāo que é executada quando o usuário clicar no botāo 'submit'
   handleSubmit = (event) => {
     event.preventDefault();
 
@@ -85,8 +80,10 @@ class Form extends React.Component {
   };
 
   render() {
+    // Verifica por erros em cada renderizaçāo
     const errors = checkErrors(this.state);
 
+    // Verifica se o usuário já interagiu pelo menos uma vez com o input antes de marcar com erro
     const shouldMarkError = (name, errors) => {
       if (this.state.touched[name]) {
         return errors[name];
